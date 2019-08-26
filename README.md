@@ -38,3 +38,11 @@ Il comporte :
     docker-compose stop
     docker-compose rm -v
     docker-compose up
+
+
+### Codecoverage
+
+Utilisation de Jacoco https://www.eclemma.org/jacoco/ <br/>
+En lançant le goal mvn install dans le module parent, cela merge les rapports des tests dans 
+le module myerp-tests, le rapport HTML est généré ici: <br/> 
+java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
