@@ -37,6 +37,14 @@
                 WHERE reference = :reference
             </value>
         </property>
+        <property name="SQLgetLastEcritureComptable">
+            <value>
+                SELECT * FROM myerp.sequence_ecriture_comptable
+                WHERE journal_code = :journal_code
+                AND annee = :annee
+                LIMIT 1
+            </value>
+        </property>
         <property name="SQLloadListLigneEcriture">
             <value>
                 SELECT * FROM myerp.ligne_ecriture_comptable
