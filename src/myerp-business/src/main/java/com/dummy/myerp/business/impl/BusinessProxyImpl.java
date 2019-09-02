@@ -46,6 +46,9 @@ public class BusinessProxyImpl implements BusinessProxy {
      */
     public static BusinessProxyImpl getInstance(DaoProxy pDaoProxy,
                                                 TransactionManager pTransactionManager) {
+        if (pDaoProxy == null) {
+            throw new UnsatisfiedLinkError("La classe BusinessProxyImpl n'a pas été initialisée.");
+        }
         daoProxy = pDaoProxy;
         AbstractBusinessManager.configure(BusinessProxyImpl.INSTANCE, pDaoProxy, pTransactionManager);
         return BusinessProxyImpl.INSTANCE;

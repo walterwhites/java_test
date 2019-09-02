@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -24,11 +25,11 @@ import static org.mockito.Mockito.when;
 public class ComptabiliteManagerImplTest {
 
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
-    private static BusinessProxy businessProxyMock=mock(BusinessProxy.class);
-    private static DaoProxy daoProxyMock=mock(DaoProxy.class);
-    private static TransactionManager transactionManagerMock=mock(TransactionManager.class);
-    private static ComptabiliteDao comptabiliteDaoMock=mock(ComptabiliteDao.class);
-    private static ComptabiliteManager comptabiliteManagerMock=mock(ComptabiliteManager.class);
+    private static BusinessProxy businessProxyMock = mock(BusinessProxy.class);
+    private static DaoProxy daoProxyMock = mock(DaoProxy.class);
+    private static TransactionManager transactionManagerMock = mock(TransactionManager.class);
+    private static ComptabiliteDao comptabiliteDaoMock = mock(ComptabiliteDao.class);
+    private static ComptabiliteManager comptabiliteManagerMock = mock(ComptabiliteManager.class);
     @Rule
     public ExpectedException thrown= ExpectedException.none();
 
@@ -79,6 +80,31 @@ public class ComptabiliteManagerImplTest {
                 null, null, new BigDecimal(987)));
         when(comptabiliteDaoMock.getEcritureComptableByRef("AC-2019/99999")).thenThrow(new NotFoundException("Ecriture Comptable qui n'existe pas"));
         manager.checkEcritureComptable(vEcritureComptable);
+    }
+
+    /**
+     * Méthode qui permet de tester la méthode checkEcritureComptableContext
+     * Cas non passant quand la référence est null
+     * @throws Exception
+     */
+    @Test
+    public void checkEcritureComptableContextRefNULL() throws Exception {
+        thrown.expect(FunctionalException.class);
+        thrown.expectMessage("Une autre écriture comptable existe déjà avec la même référence.");
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("test");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1,"test"),
+                null, new BigDecimal(111),null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2,"test"),
+                null, null,new BigDecimal(111)));
+
+        String referenceExpected="AC-2019/00051";
+        when(comptabiliteDaoMock.getLastSequenceEcritureComptable("AC", 2019)).thenReturn(new SequenceEcritureComptable(2019, 50));
+        manager.addReference(vEcritureComptable);
+        manager.checkEcritureComptableContext(vEcritureComptable);
+        throw new NoSuchElementException();
     }
 
     /**
