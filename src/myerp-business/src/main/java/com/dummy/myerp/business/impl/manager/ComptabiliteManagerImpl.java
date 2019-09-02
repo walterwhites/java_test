@@ -58,7 +58,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
-    // TODO à tester
+    // TODO à tester -> ok
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) {
         // TODO à implémenter
@@ -86,11 +86,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         try {
             sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().getLastSequenceEcritureComptable(
                     pEcritureComptable.getJournal().getCode(), year);
-        } catch (NotFoundException e) {
             num = sequenceEcritureComptable.getDerniereValeur() + 1;
+        } catch (NotFoundException e) {
+            num = 1;
         }
 
         String ref = code_journal + '-' + year + '/' + String.format("%05d", num);
+        pEcritureComptable.setReference(ref);
         getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pEcritureComptable.getJournal().getCode(), sequenceEcritureComptable);
         getTransactionManager().commitMyERP(tm);
         tm = null;
@@ -114,8 +116,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    // TODO tests à compléter
-    protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
+    // TODO tests à compléter -> ok
+    public void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
         // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
         Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
         if (!vViolations.isEmpty()) {
@@ -154,6 +156,21 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        String regexCode = "-";
+        String regexAnnee = "/";
+        // split pour garder le code
+        if(!pEcritureComptable.getJournal().getCode().equals(pEcritureComptable.getReference().split(regexCode)[0])) {
+            throw new FunctionalException("Il y a une erreur dans la référence concernant le code journal.");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(pEcritureComptable.getDate());
+        int year = calendar.get(Calendar.YEAR);
+
+        // split pour garder l'année puis le numéro, puis ensuite split pour garder juste l'année
+        if(year != Integer.valueOf(pEcritureComptable.getReference().split(regexCode)[1].split(regexAnnee)[0])) {
+            throw new FunctionalException("Il y a une erreur dans la référence concernant l'année");
+        }
     }
 
 
