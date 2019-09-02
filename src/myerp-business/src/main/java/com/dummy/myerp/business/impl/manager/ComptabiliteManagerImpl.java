@@ -169,7 +169,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // split pour garder l'année puis le numéro, puis ensuite split pour garder juste l'année
         if(year != Integer.valueOf(pEcritureComptable.getReference().split(regexCode)[1].split(regexAnnee)[0])) {
-            throw new FunctionalException("Il y a une erreur dans la référence concernant l'année");
+            throw new FunctionalException("Il y a une erreur dans la référence concernant l'année.");
         }
     }
 
