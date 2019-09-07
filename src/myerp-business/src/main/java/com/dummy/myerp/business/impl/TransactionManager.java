@@ -67,9 +67,12 @@ public class TransactionManager {
      *
      * @param pTStatus retrouné par la méthode {@link #beginTransactionMyERP()}
      */
-    public void commitMyERP(TransactionStatus pTStatus) {
+    public void commitMyERP(TransactionStatus pTStatus) throws NullPointerException {
         if (pTStatus != null) {
             ptmMyERP.commit(pTStatus);
+        }
+        else {
+            throw new NullPointerException();
         }
     }
 
