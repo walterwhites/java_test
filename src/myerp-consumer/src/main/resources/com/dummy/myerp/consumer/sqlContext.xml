@@ -37,7 +37,7 @@
                 WHERE reference = :reference
             </value>
         </property>
-        <property name="SQLgetLastEcritureComptable">
+        <property name="SQLgetLastSequenceEcritureComptable">
             <value>
                 SELECT * FROM myerp.sequence_ecriture_comptable
                 WHERE journal_code = :journal_code
