@@ -1,12 +1,12 @@
 package com.dummy.myerp.business.impl;
 
+import com.dummy.myerp.business.contrat.BusinessProxy;
+import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
+
 import javax.validation.Configuration;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
-import com.dummy.myerp.business.contrat.BusinessProxy;
-import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 
 
 /**
@@ -47,8 +47,13 @@ public abstract class AbstractBusinessManager {
      *
      * @return {@link BusinessProxy}
      */
-    protected BusinessProxy getBusinessProxy() {
-        return businessProxy;
+    protected BusinessProxy getBusinessProxy() throws NullPointerException {
+        if (businessProxy != null) {
+            return businessProxy;
+        }
+        else {
+            throw new NullPointerException();
+        }
     }
 
 

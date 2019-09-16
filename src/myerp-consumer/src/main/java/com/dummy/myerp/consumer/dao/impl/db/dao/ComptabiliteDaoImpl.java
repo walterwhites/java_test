@@ -245,7 +245,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         SQLupdateEcritureComptable = pSQLupdateEcritureComptable;
     }
     @Override
-    public void updateEcritureComptable(EcritureComptable pEcritureComptable) {
+    public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws NotFoundException {
         // ===== Ecriture Comptable
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
@@ -271,7 +271,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         SQLdeleteEcritureComptable = pSQLdeleteEcritureComptable;
     }
     @Override
-    public void deleteEcritureComptable(Integer pId) {
+    public void deleteEcritureComptable(Integer pId) throws NotFoundException {
         // ===== Suppression des lignes d'écriture
         this.deleteListLigneEcritureComptable(pId);
 
@@ -291,10 +291,12 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
      * Supprime les lignes d'écriture de l'écriture comptable d'id {@code pEcritureId}
      * @param pEcritureId id de l'écriture comptable
      */
-    protected void deleteListLigneEcritureComptable(Integer pEcritureId) {
+    protected void deleteListLigneEcritureComptable(Integer pEcritureId) throws NotFoundException {
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
         vSqlParams.addValue("ecriture_id", pEcritureId);
-        vJdbcTemplate.update(SQLdeleteListLigneEcritureComptable, vSqlParams);
+        if (vJdbcTemplate.update(SQLdeleteListLigneEcritureComptable, vSqlParams) == 0) {
+            throw new NotFoundException();
+        }
     }
 }

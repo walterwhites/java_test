@@ -13,14 +13,15 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Spy;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.SimpleTransactionStatus;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ComptabiliteManagerImplTest {
 
@@ -30,6 +31,10 @@ public class ComptabiliteManagerImplTest {
     private static TransactionManager transactionManagerMock = mock(TransactionManager.class);
     private static ComptabiliteDao comptabiliteDaoMock = mock(ComptabiliteDao.class);
     private static ComptabiliteManager comptabiliteManagerMock = mock(ComptabiliteManager.class);
+
+    @Spy
+    private static TransactionStatus transactionStatus = new SimpleTransactionStatus();
+
     @Rule
     public ExpectedException thrown= ExpectedException.none();
 
@@ -64,8 +69,9 @@ public class ComptabiliteManagerImplTest {
 
     /**
      * Cas passant checkEcritureComptableUnit et checkEcritureComptableContext passent avec une écriture qui n'existe pas
+     * @throws Exception
      */
-    @Test
+    @Test(expected = Test.None.class)
     public void checkEcritureComptable() throws Exception {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
@@ -100,11 +106,32 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2,"test"),
                 null, null,new BigDecimal(111)));
 
-        String referenceExpected="AC-2019/00051";
         when(comptabiliteDaoMock.getLastSequenceEcritureComptable("AC", 2019)).thenReturn(new SequenceEcritureComptable(2019, 50));
         manager.addReference(vEcritureComptable);
         manager.checkEcritureComptableContext(vEcritureComptable);
-        throw new NoSuchElementException();
+    }
+
+    /**
+     * Méthode qui permet de tester la méthode checkEcritureComptableContext
+     * Cas non passant quand la référence est égal à une existante
+     * @throws Exception
+     */
+    public void checkEcritureComptableContextRefAlreadyExist() throws Exception {
+        thrown.expect(FunctionalException.class);
+        thrown.expectMessage("Une autre écriture comptable existe déjà avec la même référence.");
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setReference("AC-2019/00099");
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("test");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1,"test"),
+                null, new BigDecimal(111),null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2,"test"),
+                null, null, new BigDecimal(111)));
+
+        when(comptabiliteDaoMock.getLastSequenceEcritureComptable("AC", 2019)).thenReturn(new SequenceEcritureComptable(2019, 50));
+        manager.addReference(vEcritureComptable);
+        manager.checkEcritureComptableContext(vEcritureComptable);
     }
 
     /**
@@ -303,6 +330,25 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
                 null, new BigDecimal(123),
                 null));
+        manager.checkEcritureComptableUnit(vEcritureComptable);
+    }
+
+    /**
+     * Une écriture comptable doit contenir au moins deux lignes d'écriture : une au débit et une au crédit.
+     * Cas non passant : 0 débits et 0 crédit
+     */
+    @Test(expected = FunctionalException.class)
+    public void checkEcritureComptableUnitRG3With0Debits0credits() throws Exception {
+        EcritureComptable vEcritureComptable;
+        vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setReference("AC-2019/00001");
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+                null, null,null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+                null, null,null));
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 

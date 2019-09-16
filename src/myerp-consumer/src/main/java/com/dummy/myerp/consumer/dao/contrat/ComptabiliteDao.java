@@ -81,14 +81,14 @@ public interface ComptabiliteDao {
      *
      * @param pEcritureComptable -
      */
-    void updateEcritureComptable(EcritureComptable pEcritureComptable);
+    void updateEcritureComptable(EcritureComptable pEcritureComptable) throws NotFoundException;
 
     /**
      * Supprime l'écriture comptable d'id {@code pId}.
      *
      * @param pId l'id de l'écriture
      */
-    void deleteEcritureComptable(Integer pId);
+    void deleteEcritureComptable(Integer pId) throws NotFoundException;
 
     /**
      * Update de la table sequence_ecriture_comptable

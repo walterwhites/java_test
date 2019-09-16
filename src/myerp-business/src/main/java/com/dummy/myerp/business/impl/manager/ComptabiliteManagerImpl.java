@@ -213,7 +213,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
             getTransactionManager().commitMyERP(vTS);
             vTS = null;
-        } finally {
+        }
+        catch (Exception e) {
             getTransactionManager().rollbackMyERP(vTS);
         }
     }
@@ -222,13 +223,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * {@inheritDoc}
      */
     @Override
-    public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
+    public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException, NotFoundException {
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
             getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);
             getTransactionManager().commitMyERP(vTS);
             vTS = null;
-        } finally {
+        } catch (Exception e) {
             getTransactionManager().rollbackMyERP(vTS);
         }
     }
@@ -237,13 +238,16 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * {@inheritDoc}
      */
     @Override
-    public void deleteEcritureComptable(Integer pId) {
+    public void deleteEcritureComptable(Integer pId) throws NotFoundException {
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
             getDaoProxy().getComptabiliteDao().deleteEcritureComptable(pId);
             getTransactionManager().commitMyERP(vTS);
             vTS = null;
-        } finally {
+        } catch (NotFoundException n) {
+            throw new NotFoundException();
+        }
+        catch (Exception e) {
             getTransactionManager().rollbackMyERP(vTS);
         }
     }

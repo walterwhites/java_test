@@ -29,7 +29,6 @@ public final class SpringRegistry {
     /** Le context spring de l'application */
     private ApplicationContext contextAppli;
 
-
     // ==================== ID des Beans Spring ====================
 
 
