@@ -35,7 +35,7 @@ public class IntegrationTest extends BusinessTestCase {
         public static ComptabiliteManager comptabiliteManager = new ComptabiliteManagerImpl();
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas passant : Suppression de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test
@@ -47,7 +47,7 @@ public class IntegrationTest extends BusinessTestCase {
         }
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas non passant : Suppression de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test(expected = NotFoundException.class)
@@ -56,7 +56,7 @@ public class IntegrationTest extends BusinessTestCase {
         }
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas passant : Insert de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test
@@ -79,7 +79,7 @@ public class IntegrationTest extends BusinessTestCase {
         }
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas non passant : Insert de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test(expected = FunctionalException.class)
@@ -96,7 +96,7 @@ public class IntegrationTest extends BusinessTestCase {
         }
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas passant : Update de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test()
@@ -107,7 +107,7 @@ public class IntegrationTest extends BusinessTestCase {
         }
 
         /**
-         * Méthode qui test la suppression de {@link EcritureComptable}
+         * Cas non passant : Update de {@link EcritureComptable}
          */
         @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test(expected = Exception.class)
