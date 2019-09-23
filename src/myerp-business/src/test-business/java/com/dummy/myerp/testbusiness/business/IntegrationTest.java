@@ -9,59 +9,76 @@ import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
 import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 import com.dummy.myerp.technical.exception.NotFoundException;
-import org.junit.Test;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.annotation.DirtiesContext;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+
 @ContextConfiguration
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
 public class IntegrationTest extends BusinessTestCase {
 
         public static ComptabiliteManager comptabiliteManager = new ComptabiliteManagerImpl();
+        private final Log logger = LogFactory.getLog(getClass());
 
-        /**
-         * Cas passant : Suppression de {@link EcritureComptable}
-         */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-        @Test
-        public void testDeleteEcritureComptable() throws NotFoundException {
-                int nbLignesEcritureComptableInDatabase = 5;
-                comptabiliteManager.deleteEcritureComptable(-1);
-                List<EcritureComptable> vListEcritureComptableBDD = getBusinessProxy().getComptabiliteManager().getListEcritureComptable();
-                assertEquals("la suppression n'a pas eu lieu car il y a toujours 5 lignes", nbLignesEcritureComptableInDatabase - 1, vListEcritureComptableBDD.size());
-        }
+        // appeler après chaque méthode de test
+        /*
+        @After
+        public void reset() throws Exception {
 
-        /**
-         * Cas non passant : Suppression de {@link EcritureComptable}
-         */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-        @Test(expected = NotFoundException.class)
-        public void testDeleteEcritureComptableEcritureDoesntExist() throws NotFoundException {
-                comptabiliteManager.deleteEcritureComptable(92374234);
-        }
+
+                TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+                try {
+                        comptabiliteManager.deleteAll();
+                        System.out.println("suceed -- 31231");
+                } catch (Exception e) {
+                        //getTransactionManager().rollbackMyERP(vTS);
+                        System.out.println("failed -- DFSFSFS");
+                        throw new Exception(e.getMessage());
+                }
+
+                ResourceDatabasePopulator dataSet = new ResourceDatabasePopulator();
+                try {
+                        dataSet.addScripts(new ClassPathResource("data/sql/db.sql"));
+                        dataSet.execute(getDbSource());
+                } catch (Exception e) {
+                        getTransactionManager().rollbackMyERP(vTS);
+                        throw new Exception(e.getMessage());
+                }
+
+                try {
+                        vJdbcTemplate.update("ALTER SEQUENCE myerp.ecriture_comptable_id_seq RESTART 1", sqlParameterSource);
+                        getTransactionManager().commitMyERP(vTS);
+                } catch (Exception e) {
+                        getTransactionManager().rollbackMyERP(vTS);
+                        throw new Exception(e.getMessage());
+                }
+        }*/
 
         /**
          * Cas passant : Insert de {@link EcritureComptable}
          */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test
-        public void testInsertEcritureComptable() throws NotFoundException, FunctionalException {
-                int nbLignesEcritureComptableInDatabase = 4;
+        @Order(1)
+        public void testInsertEcritureComptable() throws FunctionalException {
+                int nbLignesEcritureComptableInDatabase = 5;
                 EcritureComptable vEcritureComptable;
                 vEcritureComptable = new EcritureComptable();
                 vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -75,15 +92,16 @@ public class IntegrationTest extends BusinessTestCase {
 
                 comptabiliteManager.insertEcritureComptable(vEcritureComptable);
                 List<EcritureComptable> vListEcritureComptableBDD = comptabiliteManager.getListEcritureComptable();
-                assertEquals("l'ajout n'a pas eu lieu car il y a toujours 4 lignes", nbLignesEcritureComptableInDatabase + 1, vListEcritureComptableBDD.size());
+                assertEquals("l'ajout n'a pas eu lieu car il y a toujours 5 lignes", nbLignesEcritureComptableInDatabase + 1, vListEcritureComptableBDD.size());
         }
 
         /**
          * Cas non passant : Insert de {@link EcritureComptable}
          */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-        @Test(expected = FunctionalException.class)
+        @Test()
+        @Order(2)
         public void testInsertEcritureComptableNotValid1ligneEcriture() throws FunctionalException {
+        assertThrows(FunctionalException.class, () -> {
                 EcritureComptable vEcritureComptable;
                 vEcritureComptable = new EcritureComptable();
                 vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -93,15 +111,39 @@ public class IntegrationTest extends BusinessTestCase {
                 vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(401),
                         null, new BigDecimal(987), null));
                 comptabiliteManager.insertEcritureComptable(vEcritureComptable);
+        });
+        }
+
+        /**
+         * Cas passant : Suppression de {@link EcritureComptable}
+         */
+        @Test
+        @Order(3)
+        public void testDeleteEcritureComptable() throws Exception {
+                int nbLignesEcritureComptableInDatabase = 6;
+                comptabiliteManager.deleteEcritureComptable(-6);
+                List<EcritureComptable> vListEcritureComptableBDD = getBusinessProxy().getComptabiliteManager().getListEcritureComptable();
+                assertEquals("la suppression n'a pas eu lieu car il y a toujours 5 lignes", nbLignesEcritureComptableInDatabase - 1, vListEcritureComptableBDD.size());
+        }
+
+        /**
+         * Cas non passant : Suppression de {@link EcritureComptable}
+         */
+        @Test()
+        @Order(4)
+        public void testDeleteEcritureComptableEcritureDoesntExist() throws NotFoundException {
+                assertThrows(NotFoundException.class, () -> {
+                        comptabiliteManager.deleteEcritureComptable(92374234);
+                });
         }
 
         /**
          * Cas passant : Update de {@link EcritureComptable}
          */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
         @Test()
+        @Order(5)
         public void testUpdateEcritureComptable() throws FunctionalException, NotFoundException {
-                EcritureComptable vEcritureComptable = comptabiliteManager.getListEcritureComptable().get(3);
+                EcritureComptable vEcritureComptable = comptabiliteManager.getListEcritureComptable().get(2);
                 vEcritureComptable.setLibelle("le libelle a changé");
                 comptabiliteManager.updateEcritureComptable(vEcritureComptable);
         }
@@ -109,10 +151,12 @@ public class IntegrationTest extends BusinessTestCase {
         /**
          * Cas non passant : Update de {@link EcritureComptable}
          */
-        @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-        @Test(expected = Exception.class)
-        public void testUpdateEcritureComptableDoesntExist() throws FunctionalException, NotFoundException {
-                EcritureComptable vEcritureComptable = comptabiliteManager.getListEcritureComptable().get(999999);
-                comptabiliteManager.updateEcritureComptable(vEcritureComptable);
+        @Test()
+        @Order(6)
+        public void testUpdateEcritureComptableDoesntExist() throws Exception {
+                assertThrows(Exception.class, () -> {
+                        EcritureComptable vEcritureComptable = comptabiliteManager.getListEcritureComptable().get(999999);
+                        comptabiliteManager.updateEcritureComptable(vEcritureComptable);
+                });
         }
 }

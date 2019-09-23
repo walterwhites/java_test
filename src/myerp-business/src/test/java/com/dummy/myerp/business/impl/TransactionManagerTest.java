@@ -1,13 +1,18 @@
 package com.dummy.myerp.business.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.TransactionStatus;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
 public class TransactionManagerTest {
 
     @Spy
@@ -15,34 +20,23 @@ public class TransactionManagerTest {
 
     @Spy
     private static TransactionStatus transactionStatus;
-    /*private static Transaction transaction;
 
-    @Before
-    public void setUp() throws Exception {
-        server = new TransactionServerImpl();
-        transactionManager = mock(TransactionManager.class);
-        transaction = mock(javax.transaction.Transaction.class);
-        Mockito.stub(tm.getTransaction()).toReturn(txn);
-        Mockito.stub(tm.suspend()).toReturn(txn);
-        xaImporter = Mockito.mock(XAImporter.class);
-        Mockito.stub(xaImporter.importTransaction(Mockito.any(), Mockito.any(), Mockito.eq(TIMEOUT))).toReturn(txn);
-        server.setXaImporter(xaImporter);
-        server.setTransactionManager(tm);
-    }
-*/
-
-    @Test(expected = NullPointerException.class)
+    @Test()
     public void commitMyERPWithoutBeginTransaction() throws NullPointerException {
-        doReturn(null).when(transactionManager).beginTransactionMyERP();
-        TransactionStatus transactionStatus = transactionManager.beginTransactionMyERP();
-        transactionManager.commitMyERP(transactionStatus);
+        assertThrows(NullPointerException.class, () -> {
+            doReturn(null).when(transactionManager).beginTransactionMyERP();
+            TransactionStatus transactionStatus = transactionManager.beginTransactionMyERP();
+            transactionManager.commitMyERP(transactionStatus);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test()
     public void rollbackMyERPNULL() throws NullPointerException {
-        doReturn(null).when(transactionManager).beginTransactionMyERP();
-        TransactionStatus transactionStatus = transactionManager.beginTransactionMyERP();
-        transactionManager.rollbackMyERP(null);
+        assertThrows(NullPointerException.class, () -> {
+            doReturn(null).when(transactionManager).beginTransactionMyERP();
+            TransactionStatus transactionStatus = transactionManager.beginTransactionMyERP();
+            transactionManager.rollbackMyERP(null);
+        });
     }
 
 

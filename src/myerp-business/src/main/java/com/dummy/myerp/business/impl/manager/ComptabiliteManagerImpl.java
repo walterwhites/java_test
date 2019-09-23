@@ -223,7 +223,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * {@inheritDoc}
      */
     @Override
-    public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException, NotFoundException {
+    public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
+        this.checkEcritureComptable(pEcritureComptable);
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
             getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);
@@ -246,6 +247,22 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             vTS = null;
         } catch (NotFoundException n) {
             throw new NotFoundException();
+        }
+        catch (Exception e) {
+            getTransactionManager().rollbackMyERP(vTS);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteAll() {
+        TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+        try {
+            getDaoProxy().getComptabiliteDao().deleteAll();
+            getTransactionManager().commitMyERP(vTS);
+            vTS = null;
         }
         catch (Exception e) {
             getTransactionManager().rollbackMyERP(vTS);

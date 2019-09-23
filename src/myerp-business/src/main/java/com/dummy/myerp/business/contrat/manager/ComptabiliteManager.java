@@ -92,4 +92,9 @@ public interface ComptabiliteManager {
      * @param pId l'id de l'écriture
      */
     void deleteEcritureComptable(Integer pId) throws NotFoundException;
+
+    /**
+     * Supprime le contenu de  toutes les tables
+     */
+    void deleteAll();
 }

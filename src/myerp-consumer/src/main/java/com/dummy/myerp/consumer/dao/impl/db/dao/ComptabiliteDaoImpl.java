@@ -256,7 +256,6 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vSqlParams.addValue("libelle", pEcritureComptable.getLibelle());
 
         vJdbcTemplate.update(SQLupdateEcritureComptable, vSqlParams);
-
         // ===== Liste des lignes d'écriture
         this.deleteListLigneEcritureComptable(pEcritureComptable.getId());
         this.insertListLigneEcritureComptable(pEcritureComptable);
@@ -298,5 +297,43 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         if (vJdbcTemplate.update(SQLdeleteListLigneEcritureComptable, vSqlParams) == 0) {
             throw new NotFoundException();
         }
+    }
+
+    /** SQLdeleteLigneEcriture */
+    private static String SQLdeleteLigneEcriture;
+    public void setSQLdeleteLigneEcriture(String pSQLdeleteLigneEcriture) {
+        SQLdeleteLigneEcriture = pSQLdeleteLigneEcriture;
+    }
+    /** SQLdeleteSequence */
+    private static String SQLdeleteSequence;
+    public void setSQLdeleteSequence(String pSQLdeleteSequence) {
+        SQLdeleteSequence = pSQLdeleteSequence;
+    }
+    /** SQLdeleteEcriture */
+    private static String SQLdeleteEcriture;
+    public void setSQLdeleteEcriture(String pSQLdeleteEcriture) {
+        SQLdeleteEcriture = pSQLdeleteEcriture;
+    }
+    /** SQLdeleteJournalComptable */
+    private static String SQLdeleteJournalComptable;
+    public void setSQLdeleteJournalComptable(String pSQLdeleteJournalComptable) {
+        SQLdeleteJournalComptable = pSQLdeleteJournalComptable;
+    }
+    /** SQLdeleteCompteComptable */
+    private static String SQLdeleteCompteComptable;
+    public void setSQLdeleteCompteComptable(String pSQLdeleteCompteComptable) {
+        SQLdeleteCompteComptable = pSQLdeleteCompteComptable;
+    }
+    /**
+     * Supprime toutes les lignes
+     */
+    public void deleteAll() {
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+        vJdbcTemplate.update(SQLdeleteLigneEcriture, vSqlParams);
+        vJdbcTemplate.update(SQLdeleteSequence, vSqlParams);
+        vJdbcTemplate.update(SQLdeleteEcriture, vSqlParams);
+        vJdbcTemplate.update(SQLdeleteJournalComptable, vSqlParams);
+        vJdbcTemplate.update(SQLdeleteCompteComptable, vSqlParams);
     }
 }

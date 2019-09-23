@@ -3,14 +3,13 @@ package com.dummy.myerp.business.impl;
 import com.dummy.myerp.business.contrat.BusinessProxy;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class AbstractBusinessManagerTest {
-
     @Spy
     private static DaoProxy daoProxy = new DaoProxy() {
         @Override
@@ -33,15 +32,19 @@ public class AbstractBusinessManagerTest {
         }
     };
 
-    @Test(expected = NullPointerException.class)
+    @Test()
     public void getBusinessProxyWithNullBusinessProxy() {
-        abstractBusinessManager.configure(null, daoProxy, transactionManager);
-        abstractBusinessManager.getBusinessProxy();
+        assertThrows(NullPointerException.class, () -> {
+            abstractBusinessManager.configure(null, daoProxy, transactionManager);
+            abstractBusinessManager.getBusinessProxy();
+        });
     }
 
-    @Test(expected = Test.None.class)
+    @Test()
     public void getBusinessProxyWithBusinessProxy() {
-        abstractBusinessManager.configure(businessProxy, daoProxy, transactionManager);
-        abstractBusinessManager.getBusinessProxy();
+        assertDoesNotThrow(() -> {
+            abstractBusinessManager.configure(businessProxy, daoProxy, transactionManager);
+            abstractBusinessManager.getBusinessProxy();
+        });
     }
 }

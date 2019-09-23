@@ -1,6 +1,6 @@
 package com.dummy.myerp.testbusiness.business;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hibernate.validator.util.Contracts.assertNotNull;
 

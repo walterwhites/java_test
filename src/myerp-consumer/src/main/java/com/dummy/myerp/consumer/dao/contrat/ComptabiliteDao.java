@@ -96,4 +96,9 @@ public interface ComptabiliteDao {
      * @param pSequenceEcritureComptable : Un bean de type {@link SequenceEcritureComptable}
      */
     void updateSequenceEcritureComptable(String pCodeJournal, SequenceEcritureComptable pSequenceEcritureComptable);
+
+    /**
+     * Supprime le contenu de toutes les tables
+     */
+    void deleteAll();
 }
