@@ -37,6 +37,14 @@
                 WHERE reference = :reference
             </value>
         </property>
+        <property name="SQLgetLastSequenceEcritureComptable">
+            <value>
+                SELECT * FROM myerp.sequence_ecriture_comptable
+                WHERE journal_code = :journal_code
+                AND annee = :annee
+                LIMIT 1
+            </value>
+        </property>
         <property name="SQLloadListLigneEcriture">
             <value>
                 SELECT * FROM myerp.ligne_ecriture_comptable
@@ -58,7 +66,7 @@
         <property name="SQLinsertListLigneEcritureComptable">
             <value>
                 INSERT INTO myerp.ligne_ecriture_comptable (
-                    ecriture_id, ligne_id, compte_comptable_numero, libelle, debit
+                    ecriture_id, ligne_id, compte_comptable_numero, libelle, debit,
                     credit
                 ) VALUES (
                     :ecriture_id, :ligne_id, :compte_comptable_numero, :libelle, :debit,
@@ -89,6 +97,35 @@
                 WHERE ecriture_id = :ecriture_id
             </value>
         </property>
+        <property name="SQLdeleteLigneEcriture">
+            <value>
+                DELETE FROM myerp.ligne_ecriture_comptable
+                WHERE ligne_ecriture_comptable.ecriture_id = ligne_ecriture_comptable.ecriture_id;
+            </value>
+        </property>
+        <property name="SQLdeleteSequence">
+            <value>
+                DELETE FROM myerp.sequence_ecriture_comptable
+                WHERE sequence_ecriture_comptable.annee = sequence_ecriture_comptable.annee;
+            </value>
+        </property>
+        <property name="SQLdeleteEcriture">
+            <value>
+                DELETE FROM myerp.ecriture_comptable
+                WHERE ecriture_comptable.libelle = ecriture_comptable.libelle;
+            </value>
+        </property>
+        <property name="SQLdeleteJournalComptable">
+            <value>
+                DELETE FROM myerp.journal_comptable
+                WHERE journal_comptable.libelle = journal_comptable.libelle;
+            </value>
+        </property>
+        <property name="SQLdeleteCompteComptable">
+            <value>
+                DELETE FROM myerp.compte_comptable
+                WHERE compte_comptable.libelle = compte_comptable.libelle;
+            </value>
+        </property>
     </bean>
-
 </beans>

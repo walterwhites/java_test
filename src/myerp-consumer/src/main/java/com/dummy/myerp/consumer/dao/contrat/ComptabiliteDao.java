@@ -1,11 +1,12 @@
 package com.dummy.myerp.consumer.dao.contrat;
 
-import java.util.List;
-
 import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
 import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
 import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
+import com.dummy.myerp.model.bean.comptabilite.SequenceEcritureComptable;
 import com.dummy.myerp.technical.exception.NotFoundException;
+
+import java.util.List;
 
 
 /**
@@ -45,6 +46,14 @@ public interface ComptabiliteDao {
     EcritureComptable getEcritureComptable(Integer pId) throws NotFoundException;
 
     /**
+     * Renvoie la dernière écriture Comptable
+     *
+     * @return {@link EcritureComptable}
+     * @throws NotFoundException : Si l'écriture comptable n'est pas trouvée
+     */
+    SequenceEcritureComptable getLastSequenceEcritureComptable(String journal_code, Integer pYear) throws NotFoundException;
+
+    /**
      * Renvoie l'Écriture Comptable de référence {@code pRef}.
      *
      * @param pReference la référence de l'écriture comptable
@@ -72,12 +81,24 @@ public interface ComptabiliteDao {
      *
      * @param pEcritureComptable -
      */
-    void updateEcritureComptable(EcritureComptable pEcritureComptable);
+    void updateEcritureComptable(EcritureComptable pEcritureComptable) throws NotFoundException;
 
     /**
      * Supprime l'écriture comptable d'id {@code pId}.
      *
      * @param pId l'id de l'écriture
      */
-    void deleteEcritureComptable(Integer pId);
+    void deleteEcritureComptable(Integer pId) throws NotFoundException;
+
+    /**
+     * Update de la table sequence_ecriture_comptable
+     * @param pCodeJournal : Le code du journal comptable
+     * @param pSequenceEcritureComptable : Un bean de type {@link SequenceEcritureComptable}
+     */
+    void updateSequenceEcritureComptable(String pCodeJournal, SequenceEcritureComptable pSequenceEcritureComptable);
+
+    /**
+     * Supprime le contenu de toutes les tables
+     */
+    void deleteAll();
 }

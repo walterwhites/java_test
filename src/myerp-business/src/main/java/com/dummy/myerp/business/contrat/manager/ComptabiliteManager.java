@@ -1,11 +1,12 @@
 package com.dummy.myerp.business.contrat.manager;
 
-import java.util.List;
-
 import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
 import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
 import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
+import com.dummy.myerp.technical.exception.NotFoundException;
+
+import java.util.List;
 
 
 /**
@@ -61,6 +62,15 @@ public interface ComptabiliteManager {
     void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
 
     /**
+     * Vérifie que l'Ecriture comptable respecte les règles de gestion unitaires,
+     * c'est à dire indépendemment du contexte (unicité de la référence, exercie comptable non cloturé...)
+     *
+     * @param pEcritureComptable -
+     * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
+     */
+    void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException;
+
+    /**
      * Insert une nouvelle écriture comptable.
      *
      * @param pEcritureComptable -
@@ -74,12 +84,17 @@ public interface ComptabiliteManager {
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
+    void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException, NotFoundException;
 
     /**
      * Supprime l'écriture comptable d'id {@code pId}.
      *
      * @param pId l'id de l'écriture
      */
-    void deleteEcritureComptable(Integer pId);
+    void deleteEcritureComptable(Integer pId) throws NotFoundException;
+
+    /**
+     * Supprime le contenu de  toutes les tables
+     */
+    void deleteAll();
 }
