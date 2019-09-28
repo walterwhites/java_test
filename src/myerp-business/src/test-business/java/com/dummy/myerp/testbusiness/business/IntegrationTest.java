@@ -11,15 +11,17 @@ import com.dummy.myerp.technical.exception.FunctionalException;
 import com.dummy.myerp.technical.exception.NotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.TransactionStatus;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -39,24 +41,22 @@ public class IntegrationTest extends BusinessTestCase {
         private final Log logger = LogFactory.getLog(getClass());
 
         // appeler après chaque méthode de test
-        /*
-        @After
+        @AfterEach
         public void reset() throws Exception {
 
-
+                NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDbSource());
+                MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
                 TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
                 try {
                         comptabiliteManager.deleteAll();
-                        System.out.println("suceed -- 31231");
                 } catch (Exception e) {
-                        //getTransactionManager().rollbackMyERP(vTS);
-                        System.out.println("failed -- DFSFSFS");
+                        getTransactionManager().rollbackMyERP(vTS);
                         throw new Exception(e.getMessage());
                 }
 
                 ResourceDatabasePopulator dataSet = new ResourceDatabasePopulator();
                 try {
-                        dataSet.addScripts(new ClassPathResource("data/sql/db.sql"));
+                        dataSet.addScripts(new ClassPathResource("/com/dummy/myerp/testbusiness/business/data/sql/db.sql"));
                         dataSet.execute(getDbSource());
                 } catch (Exception e) {
                         getTransactionManager().rollbackMyERP(vTS);
@@ -64,13 +64,13 @@ public class IntegrationTest extends BusinessTestCase {
                 }
 
                 try {
-                        vJdbcTemplate.update("ALTER SEQUENCE myerp.ecriture_comptable_id_seq RESTART 1", sqlParameterSource);
+                        vJdbcTemplate.update("ALTER SEQUENCE myerp.ecriture_comptable_id_seq RESTART 1", vSqlParams);
                         getTransactionManager().commitMyERP(vTS);
                 } catch (Exception e) {
                         getTransactionManager().rollbackMyERP(vTS);
                         throw new Exception(e.getMessage());
                 }
-        }*/
+        }
 
         /**
          * Cas passant : Insert de {@link EcritureComptable}
@@ -120,8 +120,8 @@ public class IntegrationTest extends BusinessTestCase {
         @Test
         @Order(3)
         public void testDeleteEcritureComptable() throws Exception {
-                int nbLignesEcritureComptableInDatabase = 6;
-                comptabiliteManager.deleteEcritureComptable(-6);
+                int nbLignesEcritureComptableInDatabase = 5;
+                comptabiliteManager.deleteEcritureComptable(-3);
                 List<EcritureComptable> vListEcritureComptableBDD = getBusinessProxy().getComptabiliteManager().getListEcritureComptable();
                 assertEquals("la suppression n'a pas eu lieu car il y a toujours 5 lignes", nbLignesEcritureComptableInDatabase - 1, vListEcritureComptableBDD.size());
         }

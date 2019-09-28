@@ -46,3 +46,24 @@ Utilisation de Jacoco https://www.eclemma.org/jacoco/ <br/>
 En lançant le goal mvn install dans le module parent, cela merge les rapports des tests dans 
 le module myerp-tests, le rapport HTML est généré ici: <br/> 
 java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
+
+
+### Soutenance
+
+    cd java_test/docker/dev
+    docker-compose down && docker-compose up --d
+    
+##### pour lancer les tests unitaires
+
+    cd java_test/src/
+    mvn clean install
+    
+##### pour lancer les tests d'intégration (avec le profil test-business)
+
+    cd java_test/src/
+    mvn clean install -p test-business
+    
+##### pour accéder au code coverage
+    
+    cd java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
+    open index.html
