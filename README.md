@@ -63,6 +63,8 @@ java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
     cd java_test/src/
     mvn clean install -p test-business
     
+Les tests utilisent une base de données spécifique de test (voir le fichier docker-compose)
+    
 ##### pour accéder au code coverage
     
     cd java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
