@@ -47,32 +47,8 @@ public class ComptabiliteManagerImplTest {
         when(daoProxyMock.getComptabiliteDao()).thenReturn(comptabiliteDaoMock);
     }
 
-
-    /**
-     * Test de la méthode addReference(EcritureComptable pEcritureComptable) dans le cas
-     * d'une séquence d'écriture comptable qui existe déjà.
-     * @throws Exception
-     */
-    @Test
-    public void addReferenceAlreadyExistRG6() throws Exception {
-        EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-        vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setLibelle("test");
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1,"test"),
-                null, new BigDecimal(111),null));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2,"test"),
-                null, null, new BigDecimal(111)));
-
-        String referenceExpected="AC-2019/00051";
-        when(comptabiliteDaoMock.getLastSequenceEcritureComptable("AC", 2019)).thenReturn(new SequenceEcritureComptable(2019, 50));
-        manager.addReference(vEcritureComptable);
-        assertEquals(referenceExpected, vEcritureComptable.getReference(), "Mis à jour impossible car cette référence d'écriture comptable existe déjà");
-    }
-
     /**
      * Cas passant checkEcritureComptableUnit et checkEcritureComptableContext passent avec une écriture qui n'existe pas
-     * @throws Exception
      */
     @Test()
     public void checkEcritureComptable() throws Exception {

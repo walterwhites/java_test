@@ -97,6 +97,32 @@ public class IntegrationTest extends BusinessTestCase {
 
         /**
          * Cas non passant : Insert de {@link EcritureComptable}
+         * référence existe déjà
+         */
+        @Test
+        public void addReferenceAlreadyExistRG6() throws Exception {
+                Exception exception = assertThrows(FunctionalException.class, () -> {
+                        EcritureComptable vEcritureComptable;
+                        vEcritureComptable = new EcritureComptable();
+                        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+                        vEcritureComptable.setReference("AC-2019/00001");
+                        vEcritureComptable.setDate(new Date());
+                        vEcritureComptable.setLibelle("Libelle");
+                        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(401),
+                                null, new BigDecimal(987), null));
+                        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(401),
+                                null, null, new BigDecimal(987)));
+
+                        comptabiliteManager.insertEcritureComptable(vEcritureComptable);
+                        // différent id pour simuler une écriture comptable différente
+                        vEcritureComptable.setId(676);
+                        comptabiliteManager.insertEcritureComptable(vEcritureComptable);
+                });
+                Assertions.assertEquals("Une autre écriture comptable existe déjà avec la même référence.", exception.getMessage());
+        }
+
+        /**
+         * Cas non passant : Insert de {@link EcritureComptable}
          */
         @Test()
         @Order(2)
