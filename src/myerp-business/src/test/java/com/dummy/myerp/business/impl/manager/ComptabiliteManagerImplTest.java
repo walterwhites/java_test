@@ -51,7 +51,7 @@ public class ComptabiliteManagerImplTest {
      * Cas passant checkEcritureComptableUnit et checkEcritureComptableContext passent avec une écriture qui n'existe pas
      */
     @Test()
-    public void checkEcritureComptable() throws Exception {
+    public void checkEcritureComptable() {
         assertDoesNotThrow(() -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -75,7 +75,7 @@ public class ComptabiliteManagerImplTest {
      * @throws Exception
      */
     @Test
-    public void checkEcritureComptableContextRefNULL() throws Exception {
+    public void checkEcritureComptableContextRefNULL() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable = new EcritureComptable();
             vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -98,7 +98,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant quand la référence est égal à une existante
      * @throws Exception
      */
-    public void checkEcritureComptableContextRefAlreadyExist() throws Exception {
+    public void checkEcritureComptableContextRefAlreadyExist() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable = new EcritureComptable();
             vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -137,7 +137,7 @@ public class ComptabiliteManagerImplTest {
     }
 
     @Test()
-    public void checkEcritureComptableUnitViolation() throws Exception {
+    public void checkEcritureComptableUnitViolation() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -151,7 +151,7 @@ public class ComptabiliteManagerImplTest {
      * Cas passant positif
      */
     @Test()
-    public void checkEcritureComptableUnitRG2() throws Exception {
+    public void checkEcritureComptableUnitRG2() {
         assertDoesNotThrow(() -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -173,7 +173,7 @@ public class ComptabiliteManagerImplTest {
      * Cas passant negatif
      */
     @Test()
-    public void checkEcritureComptableUnitRG2WithNegative() throws Exception {
+    public void checkEcritureComptableUnitRG2WithNegative() {
         assertDoesNotThrow(() -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -195,7 +195,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant crédit et débit non égaux
      */
     @Test()
-    public void checkEcritureComptableUnitRG2NotEqual() throws Exception {
+    public void checkEcritureComptableUnitRG2NotEqual() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -217,7 +217,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant crédit et débit inverse
      */
     @Test()
-    public void checkEcritureComptableUnitRG2Inverse() throws Exception {
+    public void checkEcritureComptableUnitRG2Inverse() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -238,7 +238,7 @@ public class ComptabiliteManagerImplTest {
      * Cas passant
      */
     @Test()
-    public void checkEcritureComptableUnitRG3() throws Exception {
+    public void checkEcritureComptableUnitRG3() {
         assertDoesNotThrow(() -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -259,7 +259,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant : 1 crédit et 0 débit
      */
     @Test()
-    public void checkEcritureComptableUnitRG3With1Credit() throws Exception {
+    public void checkEcritureComptableUnitRG3With1Credit() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -278,7 +278,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant : 1 débit et 0 crédit
      */
     @Test()
-    public void checkEcritureComptableUnitRG3With1Debit() throws Exception {
+    public void checkEcritureComptableUnitRG3With1Debit() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -297,7 +297,7 @@ public class ComptabiliteManagerImplTest {
     * Cas non passant : 2 crédits et 0 débit
     */
     @Test()
-    public void checkEcritureComptableUnitRG3With2Credits() throws Exception {
+    public void checkEcritureComptableUnitRG3With2Credits() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -318,7 +318,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant : 2 débits et 0 crédit
      */
     @Test()
-    public void checkEcritureComptableUnitRG3With2Debits() throws Exception {
+    public void checkEcritureComptableUnitRG3With2Debits() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -341,7 +341,7 @@ public class ComptabiliteManagerImplTest {
      * Cas non passant : 0 débits et 0 crédit
      */
     @Test()
-    public void checkEcritureComptableUnitRG3With0Debits0credits() throws Exception {
+    public void checkEcritureComptableUnitRG3With0Debits0credits() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -362,7 +362,7 @@ public class ComptabiliteManagerImplTest {
      *  Cas non passant avec une date dans le passée
      */
     @Test()
-    public void checkEcritureComptableUnitRG5BadAnnee() throws Exception {
+    public void checkEcritureComptableUnitRG5BadAnnee() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
@@ -384,7 +384,7 @@ public class ComptabiliteManagerImplTest {
      *  Cas non passant avec un mauvais code journal
      */
     @Test()
-    public void checkEcritureComptableUnitRG5BadCodeJournal() throws Exception {
+    public void checkEcritureComptableUnitRG5BadCodeJournal() {
         Exception exception = assertThrows(FunctionalException.class, () -> {
             EcritureComptable vEcritureComptable;
             vEcritureComptable = new EcritureComptable();
