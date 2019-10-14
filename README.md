@@ -65,7 +65,28 @@ java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
     
 Les tests utilisent une base de données spécifique de test (voir le fichier docker-compose)
     
+##### TODO
+
+    ComptabiliteManagerImpl.java:61 à tester
+    ComptabiliteManagerImpl.java:64 à implémenter
+    ComptabiliteManagerImpl.java:104 à tester
+    ComptabiliteManagerImpl.java:119 à tester
+    ComptabiliteManagerImpl.java:157 RG_Compta_5
+    
+    EcritureComptable.java:83 à tester
+    
+##### Erreurs à corrigées
+
+    - dans updateEcritureComptable (ComptabiliteManagerImpl ligne 227) il faut vérifier avec 
+    checkEcritureComptable au préalable
+    - dans le fichier sqlContext il manquait une virgule dans la requête 
+    (https://github.com/walterwhites/java_test/commit/3bae7e5ff7dc182adc6890ffb49923dd9f5594d0#diff-1ded7f8287b42f81864a273c25c8a007)
+    - dans la méthode getTotalCredit, il faut utiliser getTotalCredit au lieu de getTotalDébit
+    - dans la méthode isEquilibree de EcritureComptable il faut utiliser compareTo au lieu de Equals (pour comparer des scales différents)
+    - mauvaise régex pour la variable référence
+    (https://github.com/walterwhites/java_test/commit/b4252a9c45d77027155b633c186cbfb377c7768c#diff-fd471009e0ef5ecba3fc9df72dd0561c) 
+
 ##### pour accéder au code coverage
     
-    cd java_test/src/myerp-tests/target/site/jacoco-aggregate/index.html
+    cd java_test/src/myerp-tests/target/site/jacoco-aggregate
     open index.html
