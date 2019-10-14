@@ -6,5 +6,5 @@ before_install:
   - cd docker/dev
   - docker-compose up -d
   - cd ../../src/
-  - mvn clean install -P test-business
+  - mvn clean install -P test-consumer
 
