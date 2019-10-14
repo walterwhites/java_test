@@ -2,8 +2,9 @@ language: java
 services:
   - postgresql
   - docker
-before_script:
-  - docker-compose up -d
 before_install:
-  - cd src/
+  - cd docker/dev
+  - docker-compose up -d
+  - cd ../../src/
   - mvn clean install -P test-business
+
